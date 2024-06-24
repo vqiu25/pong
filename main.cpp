@@ -4,6 +4,10 @@
 
 using namespace std;
 
+// Global variables
+int playerScore = 0;
+int cpuScore = 0;
+
 class Ball {
 private:
   float x, y;
@@ -15,6 +19,39 @@ public:
   Ball(float initX, float initY, int initSpeedX, int initSpeedY, int initRadius)
       : x(initX), y(initY), speedX(initSpeedX), speedY(initSpeedY),
         radius(initRadius) {}
+
+  void draw() { DrawCircle(x, y, radius, WHITE); }
+
+  void update() {
+    x += speedX;
+    y += speedY;
+
+    // If the coordinates of the ball reach the very top, or bottom.
+    // If the coordinates of the ball reach the very left, or right.
+    if (y + radius >= GetScreenHeight() || y - radius <= 0) {
+      speedY *= -1;
+    }
+
+    // Update Scores
+    if (x + radius >= GetScreenWidth()) {
+      cpuScore++;
+      resetBall();
+    }
+
+    if (x - radius <= 0) {
+      playerScore++;
+      resetBall();
+    }
+  }
+
+  void resetBall() {
+    x = GetScreenWidth() / 2;
+    y = GetScreenHeight() / 2;
+
+    int speedChoices[2] = {-1, 1};
+    speedX *= speedChoices[GetRandomValue(0, 1)];
+    speedY *= speedChoices[GetRandomValue(0, 1)];
+  }
 
   // Getters
   float getX() const { return x; }
@@ -29,23 +66,6 @@ public:
   void setSpeedX(int newSpeedX) { speedX = newSpeedX; }
   void setSpeedY(int newSpeedY) { speedY = newSpeedY; }
   void setRadius(int newRadius) { radius = newRadius; }
-
-  void draw() { DrawCircle(x, y, radius, WHITE); }
-
-  void update() {
-    x += speedX;
-    y += speedY;
-
-    // If the coordinates of the ball reach the very top, or bottom.
-    // If the coordinates of the ball reach the very left, or right.
-    if (y + radius >= GetScreenHeight() || y - radius <= 0) {
-      speedY *= -1;
-    }
-
-    if (x + radius >= GetScreenWidth() || x - radius <= 0) {
-      speedX *= -1;
-    }
-  }
 };
 
 class Paddle {
@@ -72,7 +92,9 @@ public:
       : x(initX), y(initY), width(initWidth), height(initHeight),
         speed(initSpeed) {}
 
-  void draw() { DrawRectangle(x, y, width, height, WHITE); }
+  void draw() {
+    DrawRectangleRounded(Rectangle{x, y, width, height}, 100, 0, WHITE);
+  }
 
   void update() {
 
@@ -161,6 +183,9 @@ int main() {
     player.update();
     cpu.draw();
     cpu.update(ball.getY());
+    DrawText(TextFormat("%i", cpuScore), screenWidth / 4 - 20, 20, 80, WHITE);
+    DrawText(TextFormat("%i", playerScore), 3 * screenWidth / 4 - 20, 20, 80,
+             WHITE);
 
     EndDrawing();
   }
