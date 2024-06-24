@@ -1,7 +1,7 @@
 # Pong
 
 <p align="center">
-  <img width="449" alt="pong-logo" src="https://github.com/vqiu25/pong/assets/109129209/bf8ddada-9539-45a2-b281-8c955a2c4890">
+  <img width="400" alt="pong-logo" src="https://github.com/vqiu25/pong/assets/109129209/bf8ddada-9539-45a2-b281-8c955a2c4890">
 </p>
 
 ## About
