@@ -54,6 +54,18 @@ private:
   float width, height;
   int speed;
 
+protected:
+  void limitMovement() {
+    // If the paddle goes beyond the screen
+    if (y <= 0) {
+      y = 0;
+    }
+
+    if (y + height >= GetScreenHeight()) {
+      y = GetScreenHeight() - height;
+    }
+  }
+
 public:
   Paddle(float initX, float initY, float initWidth, float initHeight,
          int initSpeed)
@@ -73,14 +85,7 @@ public:
       y += speed;
     }
 
-    // If the paddle goes beyond the screen
-    if (y <= 0) {
-      y = 0;
-    }
-
-    if (y + height >= GetScreenHeight()) {
-      y = GetScreenHeight() - height;
-    }
+    limitMovement();
   }
 
   // Getters
@@ -108,6 +113,8 @@ public:
     if (getY() + getHeight() / 2 <= ballY) {
       setY(getY() + getSpeed());
     }
+
+    limitMovement();
   }
 };
 
