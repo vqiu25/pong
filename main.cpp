@@ -74,7 +74,7 @@ public:
 
   void draw() { DrawRectangle(x, y, width, height, WHITE); }
 
-  virtual void update() {
+  void update() {
 
     // If up and or bottom arrow key is pressed
     if (IsKeyDown(KEY_UP)) {
@@ -91,8 +91,8 @@ public:
   // Getters
   float getX() const { return x; }
   float getY() const { return y; }
-  int getWidth() const { return width; }
-  int getHeight() const { return height; }
+  float getWidth() const { return width; }
+  float getHeight() const { return height; }
   int getSpeed() const { return speed; }
 
   // Setters
@@ -131,6 +131,25 @@ int main() {
   while (!WindowShouldClose()) {
     BeginDrawing();
     ClearBackground(BLACK);
+
+    // Check for collisions
+    if (CheckCollisionCircleRec(
+            Vector2{ball.getX(), ball.getY()}, ball.getRadius(),
+            Rectangle{player.getX(), player.getY(), player.getWidth(),
+                      player.getHeight()})) {
+      // If a collision occurs with the user paddle, we reverse the direction of
+      // the ball
+      ball.setSpeedX(ball.getSpeedX() * -1);
+    }
+
+    if (CheckCollisionCircleRec(Vector2{ball.getX(), ball.getY()},
+                                ball.getRadius(),
+                                Rectangle{cpu.getX(), cpu.getY(),
+                                          cpu.getWidth(), cpu.getHeight()})) {
+      // If a collision occurs with the cpu paddle, we reverse the direction of
+      // the ball
+      ball.setSpeedX(ball.getSpeedX() * -1);
+    }
 
     // Centre Line
     DrawLine(screenWidth / 2, 0, screenWidth / 2, screenHeight, WHITE);
