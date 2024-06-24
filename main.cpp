@@ -48,6 +48,42 @@ public:
   }
 };
 
+class Paddle {
+private:
+  float x, y;
+  float width, height;
+  int speed;
+
+public:
+  Paddle(float initX, float initY, float initWidth, float initHeight,
+         int initSpeed)
+      : x(initX), y(initY), width(initWidth), height(initHeight),
+        speed(initSpeed) {}
+
+  void draw() { DrawRectangle(x, y, width, height, WHITE); }
+
+  void update() {
+
+    // If up and or bottom arrow key is pressed
+    if (IsKeyDown(KEY_UP)) {
+      y -= speed;
+    }
+
+    if (IsKeyDown(KEY_DOWN)) {
+      y += speed;
+    }
+
+    // If the paddle goes beyond the screen
+    if (y <= 0) {
+      y = 0;
+    }
+
+    if (y + height >= GetScreenHeight()) {
+      y = GetScreenHeight() - height;
+    }
+  }
+};
+
 int main() {
   const int screenWidth = 1280;
   const int screenHeight = 800;
@@ -55,6 +91,7 @@ int main() {
   SetTargetFPS(60);
 
   Ball ball(screenWidth / 2, screenHeight / 2, 7, 7, 20);
+  Paddle player(screenWidth - 25 - 10, screenHeight / 2 - 120 / 2, 25, 120, 6);
 
   while (!WindowShouldClose()) {
     BeginDrawing();
@@ -67,7 +104,8 @@ int main() {
     ball.update();
     // Paddles
     DrawRectangle(10, screenHeight / 2 - 60, 25, 120, WHITE);
-    DrawRectangle(screenWidth - 35, screenHeight / 2 - 60, 25, 120, WHITE);
+    player.draw();
+    player.update();
 
     EndDrawing();
   }
