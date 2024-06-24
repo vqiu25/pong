@@ -62,7 +62,7 @@ public:
 
   void draw() { DrawRectangle(x, y, width, height, WHITE); }
 
-  void update() {
+  virtual void update() {
 
     // If up and or bottom arrow key is pressed
     if (IsKeyDown(KEY_UP)) {
@@ -82,6 +82,33 @@ public:
       y = GetScreenHeight() - height;
     }
   }
+
+  // Getters
+  float getX() const { return x; }
+  float getY() const { return y; }
+  int getWidth() const { return width; }
+  int getHeight() const { return height; }
+  int getSpeed() const { return speed; }
+
+  // Setters
+  void setX(float newX) { x = newX; }
+  void setY(float newY) { y = newY; }
+};
+
+class CpuPaddle : public Paddle {
+public:
+  // Use the same constructor as the super class
+  using Paddle::Paddle;
+
+  void update(int ballY) {
+    if (getY() + getHeight() / 2 > ballY) {
+      setY(getY() - getSpeed());
+    }
+
+    if (getY() + getHeight() / 2 <= ballY) {
+      setY(getY() + getSpeed());
+    }
+  }
 };
 
 int main() {
@@ -92,6 +119,7 @@ int main() {
 
   Ball ball(screenWidth / 2, screenHeight / 2, 7, 7, 20);
   Paddle player(screenWidth - 25 - 10, screenHeight / 2 - 120 / 2, 25, 120, 6);
+  CpuPaddle cpu(10, screenHeight / 2 - 120 / 2, 25, 120, 6);
 
   while (!WindowShouldClose()) {
     BeginDrawing();
@@ -103,9 +131,10 @@ int main() {
     ball.draw();
     ball.update();
     // Paddles
-    DrawRectangle(10, screenHeight / 2 - 60, 25, 120, WHITE);
     player.draw();
     player.update();
+    cpu.draw();
+    cpu.update(ball.getY());
 
     EndDrawing();
   }
